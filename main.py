@@ -19,6 +19,9 @@ def main():
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
 
+    score_destruction = 0
+    score_shots = 0
+
     Player.containers = (updatable, drawable)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
@@ -45,20 +48,30 @@ def main():
                 shots.add(update)  
 
         for asteroid in asteroids:
+            
             if player.check_collision(asteroid):
+            
                 print("Game over!")
+                print (f"You had {score_shots} successful shots (10 points each) and destroyed {score_destruction} asteroids (50 points each). Your score is: {10 * score_shots + 50 * score_destruction}")
                 return
+                
+
+            
             for shot in shots:
-    
+
                 if asteroid.check_collision(shot):
                     shot.kill()
                     asteroid.kill()
+                    score_shots += 1
                     new_asteroids = asteroid.split()
+                    
                     if isinstance(new_asteroids, tuple):
                         asteroids.add(new_asteroids[0], new_asteroids[1])
                         updatable.add(new_asteroids[0], new_asteroids[1])
                         drawable.add(new_asteroids[0], new_asteroids[1])
-                
+                    else:
+                        score_destruction += 1
+          
         for object in drawable:
             object.draw(screen)
         
