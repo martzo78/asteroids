@@ -17,6 +17,7 @@ def main():
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
 
     Player.containers = (updatable, drawable)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
@@ -35,7 +36,11 @@ def main():
         screen.fill("black")
         
         for object in updatable:
-            object.update(dt)
+            shot = object.update(dt)
+            if isinstance(object, Player) and shot != None:
+                updatable.add(shot)
+                drawable.add(shot)
+                shots.add(shot)  
 
         for asteroid in asteroids:
             if player.check_collision(asteroid):
