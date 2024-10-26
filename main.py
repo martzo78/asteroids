@@ -30,23 +30,29 @@ def main():
     dt = 0
 
     while True:
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+        
         screen.fill("black")
         
         for object in updatable:
-            shot = object.update(dt)
-            if isinstance(object, Player) and shot != None:
-                updatable.add(shot)
-                drawable.add(shot)
-                shots.add(shot)  
+            update = object.update(dt)
+            if isinstance(object, Player) and update != None:
+                updatable.add(update)
+                drawable.add(update)
+                shots.add(update)  
 
         for asteroid in asteroids:
             if player.check_collision(asteroid):
                 print("Game over!")
                 return
-        
+            for shot in shots:
+                if asteroid.check_collision(shot):
+                    asteroid.kill()
+                    shot.kill()
+
         for object in drawable:
             object.draw(screen)
         
